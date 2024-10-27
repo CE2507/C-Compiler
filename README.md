@@ -3,6 +3,9 @@
   If your not sure where to start I reccomend looking at Lexical-Analysis file for a start
 
 
+
+
+
 **For DFA Notes**
   
   I would reccomend reading "What is DFA" Than "Conversions" and finally "Regex to NFA ex." after that
