@@ -1,0 +1,8 @@
+x = 2.5
+
+if (x == 10) {
+    x--;
+} else {
+    x += 0.5;
+}
+"This is a string"
