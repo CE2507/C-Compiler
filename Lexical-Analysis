@@ -271,4 +271,54 @@ Please see the branch called **DFA-Images** file for the notes on What DFA and t
 
 ## Implementing DFAs for Lexical Analysis -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+first im going to start with the operators as it is the most invlolved and doesnt explicitly use a state machine
+
+Type operator(char **current) {
+        int shift = UNKNOWN; // setting shift to unknown
+        // def type of corresponding comp op so long as the order of the operators doesnt change it should work
+        const char c = **current;
+
+        switch (c) {
+                case '+':
+                        shift = PLUS;
+                        break;
+                case '-':
+                        shift = MINUS;
+                        break;
+                case '*':
+                        shift = TIMES;
+                        break;
+                case '/':
+                        shift = DIVIDE;
+                        break;
+                case '%':
+                        shift = MOD;
+                        break;
+                case '=':
+                        shift = EQUAL;
+                        break;
+                default :
+                        printf("defaulted in operator\n"); // just in case something goes wrong im not wondering where it went wrong
+                        return shift;
+        }
+        // incrementing pointer to compare the previous value identified by the type against the following
+        shift += 6; // set shift to the first of the second order operations like ++ -- // so on
+        (*current)++; // increment current
+        // starting with the simpler operation deciding weather
+        if (c == **current) {
+                printf("TOKEN TYPE OPERATORS C == CURRENT : %d\n", shift); // just for debugging purposes
+        } else if (**current == '=') {
+                shift += 6; // shifting to third order operators shouldnt overflow because == is the only outlier and its captured in the above statement
+                printf("TOKEN TYPE OPERATORS CURRENT == = : %d\n", shift); // just for debugging purposes
+        } else {
+                shift -= 6; // decrement shift to reconcile the uncoditional shift
+                (*current)--; // decrement current to adjust for lexeme assignment as it can only be a single operator at this point
+        }
+
+        // if we've made it to the end after all of that its a single operator
+        return (Type) shift;
+}
+
+The notes for this are in the DFA Images branch of this repository as well as all of the following 
+next is identitites this time the presence of a state machine will be obvious 
 
