@@ -321,4 +321,49 @@ Type operator(char **current) {
 
 The notes for this are in the DFA Images branch of this repository as well as all of the following 
 next is identitites this time the presence of a state machine will be obvious 
+the table for the DFA looks something like this 
+let a = [a-zA-Z_]
+let b = [a-zA-Z0-9_]
+-------------
+|   | a | b |
+| Φ | Φ | Φ |
+| 1 | 2 | Φ |
+| 2 | Φ | 3 |
+| 3 | Φ | 3 |
+-------------
+
+using these sets and this table we can make our function
+
+the outter switch will be the states and the inner will be the transitions
+
+Type identifier(char **current) {
+        int state = 1; // initial state
+        int issep;
+
+        while (**current != '\0') {
+                const char c = **current;
+                issep = seperator(&(*current));// reset c every pass
+                if (isspace(c) || (issep >= SEMI && issep <= CLOSEB)) break; // so we know when to end the loop
+
+                switch (state) { // here the Φ state simply represents returning an UNKNOWN type to transition to this state we will simply set state to 0
+                        case 0:
+                                return UNKNOWN;
+                        case 1:
+                                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') state = 2; // set a as denoted in the regex to nfa ab*
+                                else state = 0;
+                                break;
+                        case 2:
+                                if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c<= '9') || c == '_')) state = 0;
+                                break;
+                }
+                (*current)++;
+        }
+        // if we're here it means we have a valid identtifier and should decrement to avoid overwriting the next char upon returning to lexer_main
+        (*current)--;
+        return (state == 2 ? IDENTIFIER : UNKNOWN);
+}
+
+the seperator method is just a switch statement for the range of our seperators in typedef enum Type its really not worth mentioning
+now for numbers the only real caveats of this one is the repeats 1 or more and repeats 0 or 1 times other than that the entire
+Σ = {a, .}
 
