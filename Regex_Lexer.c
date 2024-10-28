@@ -51,7 +51,7 @@ void tokenize(char* input, FILE *file) {
                 "^(if|else|while|return|void|for|break|continue|switch|case)\\b", // Keywords
                 "^[a-zA-Z_][a-zA-Z0-9_]*", // Identifiers
                 "^[0-9]+(\\.[0-9]+)?", // Numbers: Integers and Doubles
-                "^\\+\\=|\\-\\=|\\*\\=|\\/\\=", // Compound assignment operators (change from lexical analysis explanation file using or operation into concatenation of =)
+                "^\\+\\=|\\-\\=|\\*\\=|\\/\\=", // Compound assignment operators 
                 "^\\+\\+|--|\\+|\\-|\\*|\\/|\\=\\=|\\=", // Operators
                 "^[;,.{}()]", // Seperators
                 "^\"([^\"\\\\]|\\\\.)*\"", // String Literals
