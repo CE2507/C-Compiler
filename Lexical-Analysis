@@ -379,8 +379,5 @@ Token isIdentifier(const char *current) {
         return token;
 }
 
- you may notice that we arent setting lexeme we are going to handle that in the main function so lexeme is set regardless as we go becuase even on an error we are still going to want something to output for where the error occured
-
-now time to implement that 
-
+ you may notice that we arent setting lexeme im thinking im going handle that in the main function so lexeme is set regardless as we go becuase even on an error we are still going to want something to output for where the error occured
 
