@@ -367,3 +367,125 @@ the seperator method is just a switch statement for the range of our seperators 
 now for numbers the only real caveats of this one is the repeats 1 or more and repeats 0 or 1 times other than that the entire
 Σ = {a, .}
 
+Type numbers(char **current) {
+        int state = 1;
+        int decicount = 0;
+        int issep;
+
+        while (**current != '\0') {
+                const char c = **current;
+                issep = seperator(&(*current));
+                if (isspace(c) || (issep >= SEMI && issep <= CLOSEB)) break; // so we know when to end the loop
+
+                switch (state) {
+                        case 0:
+                                return UNKNOWN;
+                        case 1:
+                                if (c >= '0' && c <= '9') state = 2;
+                                else state = 0;
+                                break;
+                        case 2:
+                                if (!(c >= '0' && c <= '9')) state = 0;
+                                if (c == '.' && decicount == 0) {
+                                        state = 3;
+                                        decicount++;
+                                }
+                                break;
+                        case 3:
+                                if (c >= '0' && c <= '9') state = 2;
+                                else state = 0;
+                                break;
+                }
+                (*current)++;
+        }
+        // if were here the state is valid
+        (*current)--;
+
+        if (state == 2) {
+                return decicount == 0 ? INT : DOUBLE;
+        } else {
+                return UNKNOWN;
+        }
+}
+
+this is my final copy for numbers i should probably have done this a while ago but before strings im going to add a main method and try tokenizing some inputs
+
+so 1 day and some debugging later and I have changed the double pointer to a single pointer and localized the lexeme logic to each funtion now we update pointer in main according
+to the lexeme length
+
+heres the main function 
+
+Token *lexer_main(char *input) {
+        Token token;
+        Token *tokens = malloc(sizeof(Token) * TOKEN_STREAM_LEN);
+
+        if (!tokens) {
+                perror("Error initializing token length");
+                return NULL;
+        }
+
+        size_t cap = TOKEN_STREAM_LEN;
+        size_t index = 0, line = 1, col = 1;
+        char *current = input;
+        printf("CURRENT INITIAL : %s", current);
+
+        while (*current != '\0') {
+                token.type = UNKNOWN;
+                token.lexeme[0] = '\0';
+
+                // skip over whitespace
+                while (isspace(*current)) {
+                        if (*current == '\n') {
+                                col = 0;
+                                line++;
+                        }
+                        current++;
+                        col++;
+                }
+                printf("TOKEN BEFORE: Type : %d, Lexeme : \'%s\', Line : %lu, Col : %lu, Current : '%c'\n", token.type, token.lexeme, line, col, *current);
+
+                // Tokenizing Logic calls
+                token = operator(current);
+                if (token.type == UNKNOWN) token = seperator(current);
+                if (token.type == UNKNOWN) token = number(current);
+                if (token.type == UNKNOWN) token = identifier(current);
+                if (token.type == UNKNOWN) current++;
+
+                // resize token array if capacity is exceeded this is called a dynamic array
+                if (index >= cap) {
+                size_t new_cap = cap * 2;
+                Token *newTokens = realloc(tokens, sizeof(Token) * new_cap);
+                        if (!newTokens) {
+                                perror("Error reallocating tokens");
+                                free(tokens);
+                                return NULL;
+                        }
+                        tokens = newTokens;
+                        cap = new_cap; // Update capacity
+                }
+
+                // current pointer incrementation
+                size_t len = strlen(token.lexeme);
+                if (len == 0) current++;
+                else current += len;
+
+                // updating column and line in the token for error messages
+                token.line = line;
+                token.col = col;
+
+                // debugging print and array adding
+                printf("TOKEN AFTER: Type : %d, Lexeme : \'%s\', Line : %lu, Col : %lu, Current : '%c' \n\n", token.type, token.lexeme, line, col, *current);
+                tokens[index++] = token;
+                token.type = UNKNOWN;
+                token.lexeme[0] = '\0';
+        }
+        Token *finalTokens = realloc(tokens, sizeof(Token) * index);
+        if (finalTokens) {
+                tokens = finalTokens;
+        }
+        return tokens;
+}
+
+it probably has some errors and id like to refactor and make it a little more efficient but for now it seems to be able to identify pretty well even the double operators work even if the lexeme
+doesnt match the type is correct
+
