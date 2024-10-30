@@ -489,3 +489,5 @@ Token *lexer_main(char *input) {
 it probably has some errors and id like to refactor and make it a little more efficient but for now it seems to be able to identify pretty well even the double operators work even if the lexeme
 doesnt match the type is correct
 
+there is also probably a lot of refundant logic now so Im going to implement some other methods and do some refactoring and that wraps up the ecplanation for lexical analysis if you would like to see 
+mt notes there will be a branch for DFA Images and for the code locate the lexer.c file I will be using this implementation the Regex_lexer will have the regex lexer code mentioned earlier
