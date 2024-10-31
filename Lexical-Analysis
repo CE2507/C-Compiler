@@ -261,7 +261,7 @@ Time for an Introduction to DFA
 ### DFA Intro -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 *Note: Things got a bit out of hand here. I didn't expect this to be so involved, but I think I've finally dredged through enough DFA, NFA, and regex stuff to gain a decent understanding. 
 I encourage you to check out these first couple of pages I wrote surrounding the concept of DFA. My notes on how to transform the regex will likely be in another file. I apologize if I make mistakes or this is not optimal. 
-I've tried my best to make these notes comprehensive, detailed, and correct, but there are many resources I encourage you to look into.
+I've tried my best to make these notes comprehensive, detailed, and accurate, but there are many resources I encourage you to look into.
 
 ## What is DFA
 

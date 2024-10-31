@@ -1,3 +1,5 @@
+// heres a bit of test code
+
 x = 2.5
 
 if (x == 10) {
@@ -6,3 +8,39 @@ if (x == 10) {
     x += 0.5;
 }
 "This is a string"
+
+// keywords
+if
+await
+
+// indentifier
+identifier
+
+// operators
++
+!=
+
+// seperators
+;
+]
+
+// literals
+2.5
+10
+"string example"
+"\" string example \\ 2 \""
+
+// here are some error values
+// keep in mind error values are 67 or 68 at the time im writing this
+
+// invalid double format
+2.5.5
+
+// unrecognized values
+$ ^ Φ Σ
+
+// strings
+"bad string syntax related to an escape \invalid"
+
+// missing end quote
+"unresolved string : see missing an end quote ->
