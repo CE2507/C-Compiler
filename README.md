@@ -1,4 +1,7 @@
 **Overview**
+  This is my first time working with C and my first big project if you are looking for a more advanced guide this is not it. 
+  This project is simply my work and a detailed description of what I learned along the way of creating it.
+
   
   If your not sure where to start I reccomend looking at Lexical-Analysis file
 
