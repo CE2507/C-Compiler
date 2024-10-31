@@ -7,10 +7,14 @@
   If your not sure where to start I reccomend looking at Lexical-Analysis file
 
 
+
+
 **Currently Working On**
 
 - Refactoring and Improving DFA_Lexer.c
 - Writing Syntactic Analysis File
+
+
 
 
 **For DFA Notes**
