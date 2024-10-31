@@ -1,4 +1,4 @@
-**NOTE : if you have any suggestions for improvement, criticisms, or would like to collaborate you can reach me at the email listed on my profile**
+**NOTE : if you have any suggestions for improvement or criticisms you can reach me at the email listed on my profile**
 
 
 
