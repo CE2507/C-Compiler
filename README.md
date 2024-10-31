@@ -6,6 +6,7 @@
 
 - Refactoring and Improving DFA_Lexer.c
 - Writing Syntactic Analysis File
+- Updating and Organizing Lexical Analysis Description
 
 
 **Overview**
