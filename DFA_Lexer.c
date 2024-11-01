@@ -12,7 +12,12 @@
 typedef enum {
         IF, ELSE, VOID, CASE, DEFAULT, BREAK, CONTINUE, WHILE, FOR, DO, RETURN, CONST, LET, VAR, DEFINE, CLASS, OBJECT, THIS, SUPER, EXTENDS, IMPLEMENTS, INTERFACE, TRY, CATCH, FINALLY, THROW, PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, IMPORT, EXPORT, ASYNC, AWAIT,
         IDENTIFIER,
-        PLUS, MINUS, TIMES, DIVIDE, MOD, NEGATION, EQUAL, INCREMENT, DECREMENT, POWER, SLCOMMENT, DOUBLEMOD, DOUBLENEGATION, EQUALITY, PLUSEQUALS, MINUSEQUALS, TIMESEQUALS, DIVIDEEQUALS, MODEQUALS, NOTEQUALS,
+        // operators 1st order
+        PLUS, MINUS, TIMES, DIVIDE, MOD, LESS, GREATER, BOR, BAND, BXOR, NEGATION, EQUAL, 
+        // second order        
+        INCREMENT, DECREMENT, POWER, SLCOMMENT, DOUBLEMOD, BSLEFT, BSRIGHT, OR, AND, EXP, DOUBLENEGATION, EQUALITY, 
+        // third order
+        PLUSEQUALS, MINUSEQUALS, TIMESEQUALS, DIVIDEEQUALS, MODEQUALS, LESSEQUALS, GREATEREQUALS, OREQUALS, ANDEQUALS, XOREQUALS, NOTEQUALS,
         SEMI, COMMA, OPENP, CLOSEP, OPENC, CLOSEC, OPENB, CLOSEB,
         INT, DOUBLE, STRING,
         UNKNOWN, INVALID,
@@ -213,10 +218,15 @@ Token operator(char *current) {
                 case '%': token.type = MOD; break;
                 case '=': token.type = EQUAL; break;
                 case '!': token.type = NEGATION; break;
+                case '<': token.type = LESS; break;
+                case '>': token.type = GREATER; break;
+                case '|': token.type = BOR; break;
+                case '&': token.type = BAND; break;
+                case '^': token.type = BOR; break;
                 default: return token;
         }
         // incrementing pointer to compare the previous value identified by the type against the following
-        token.type += 7; // set token.type to the first of the second order operations like ++ -- // so on
+        token.type += 12; // set token.type to the first of the second order operations like ++ -- // so on
         current++; // increment current
         len = 2;
         // if you look at the types youll notice that its organized by groups of seven excluding == in the last group because == would be identifie already byt this first if and the thid order if would not be run
@@ -228,9 +238,9 @@ Token operator(char *current) {
         if (c == *current) len = 2;
         // im too lazy right now to compact this logic so dont be suprised if its in the final copy
          else if (*current == '=') { len = 2;
-                token.type += 7; // token.typeing to third order operators shouldnt overflow because == is the only outlier and its captured in the above statement
+                token.type += 12; // token.typeing to third order operators shouldnt overflow because == is the only outlier and its captured in the above statement
          } else {
-                token.type -= 7; // decrement token.type to reconcile the uncoditional token.type
+                token.type -= 12; // decrement token.type to reconcile the uncoditional token.type
                 len = 1;
         }
         // if we've made it to the end after all of that its a single operator
