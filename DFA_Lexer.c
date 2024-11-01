@@ -12,7 +12,12 @@
 typedef enum {
         IF, ELSE, VOID, CASE, DEFAULT, BREAK, CONTINUE, WHILE, FOR, DO, RETURN, CONST, LET, VAR, DEFINE, CLASS, OBJECT, THIS, SUPER, EXTENDS, IMPLEMENTS, INTERFACE, TRY, CATCH, FINALLY, THROW, PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, IMPORT, EXPORT, ASYNC, AWAIT,
         IDENTIFIER,
-        PLUS, MINUS, TIMES, DIVIDE, MOD, NEGATION, EQUAL, INCREMENT, DECREMENT, POWER, SLCOMMENT, DOUBLEMOD, DOUBLENEGATION, EQUALITY, PLUSEQUALS, MINUSEQUALS, TIMESEQUALS, DIVIDEEQUALS, MODEQUALS, NOTEQUALS,
+        // operators 1st order
+        PLUS, MINUS, TIMES, DIVIDE, MOD, LESS, GREATER, BOR, BAND, BXOR, NEGATION, EQUAL, 
+        // second order        
+        INCREMENT, DECREMENT, POWER, SLCOMMENT, DOUBLEMOD, BSLEFT, BSRIGHT, OR, AND, EXP, DOUBLENEGATION, EQUALITY, 
+        // third order
+        PLUSEQUALS, MINUSEQUALS, TIMESEQUALS, DIVIDEEQUALS, MODEQUALS, LESSEQUALS, GREATEREQUALS, OREQUALS, ANDEQUALS, XOREQUALS, NOTEQUALS,
         SEMI, COMMA, OPENP, CLOSEP, OPENC, CLOSEC, OPENB, CLOSEB,
         INT, DOUBLE, STRING,
         UNKNOWN, INVALID,
@@ -31,7 +36,6 @@ char *strdup(const char *c)
 
         if (dup != NULL)
            strcpy(dup, c);
-
         return dup;
 }
 
@@ -198,7 +202,7 @@ Type search(TrieNode *root, const char *word) {
         return IDENTIFIER; // Not found
 }
 
-Token operator(char *current) {
+Token operators(char *current) {
         Token token = {UNKNOWN, "", 0, 0};
         int len = 1;
 
@@ -213,10 +217,15 @@ Token operator(char *current) {
                 case '%': token.type = MOD; break;
                 case '=': token.type = EQUAL; break;
                 case '!': token.type = NEGATION; break;
+                case '<': token.type = LESS; break;
+                case '>': token.type = GREATER; break;
+                case '|': token.type = BOR; break;
+                case '&': token.type = BAND; break;
+                case '^': token.type = BOR; break;
                 default: return token;
         }
         // incrementing pointer to compare the previous value identified by the type against the following
-        token.type += 7; // set token.type to the first of the second order operations like ++ -- // so on
+        token.type += 12; // set token.type to the first of the second order operations like ++ -- // so on
         current++; // increment current
         len = 2;
         // if you look at the types youll notice that its organized by groups of seven excluding == in the last group because == would be identifie already byt this first if and the thid order if would not be run
@@ -228,9 +237,9 @@ Token operator(char *current) {
         if (c == *current) len = 2;
         // im too lazy right now to compact this logic so dont be suprised if its in the final copy
          else if (*current == '=') { len = 2;
-                token.type += 7; // token.typeing to third order operators shouldnt overflow because == is the only outlier and its captured in the above statement
+                token.type += 12; // token.typeing to third order operators shouldnt overflow because == is the only outlier and its captured in the above statement
          } else {
-                token.type -= 7; // decrement token.type to reconcile the uncoditional token.type
+                token.type -= 12; // decrement token.type to reconcile the uncoditional token.type
                 len = 1;
         }
         // if we've made it to the end after all of that its a single operator
@@ -448,7 +457,7 @@ Token *lexer_main(char *input) {
                         if (*current == '\0') fprintf(stderr, "LEXICAL ERROR: reached end of the file while parsing string : '%s' \nline : %lu, col %lu\n", token.lexeme, line, col);
                 }
                 // calling the functions only overwriting if not previously Identified otherwise a valid token could be made unknown and an invalid meant for throwing errors could become unknown
-                if (token.type == UNKNOWN) token = operator(current);
+                if (token.type == UNKNOWN) token = operators(current);
                 if (token.type == UNKNOWN) token = seperator(current);
                 if (token.type == UNKNOWN) token = number(current);
                 if (token.type == UNKNOWN) token = identifier(current);
@@ -493,41 +502,4 @@ Token *lexer_main(char *input) {
                 tokens = finalTokens;
         }
         return tokens;
-}
-// reading the file into a buffer with error handling and passing the entire file as a self containe string within the program
-// to the main lexer method just for ease of navigation instead of being forced to reference the characters via fgetc we can
-// simply navigate as if it was a string contained within the program
-int main() {
-        // Dynamic memory allocation for input
-        char *input = NULL;
-        size_t len = 0;
-        size_t read;
-
-        // Open the file for reading
-        FILE *file = fopen("test.unn", "r");
-        if (!file) {
-                perror("Could not open file");
-                return 1; // Exit if the file cannot be opened
-        }
-
-        // Read the entire file into a buffer
-        fseek(file, 0, SEEK_END); // Go to the end of the file
-        len = ftell(file); // Get the file size
-        fseek(file, 0, SEEK_SET); // Go back to the start of the file
-
-        input = malloc(len + 1); // Allocate memory for the input
-        if (!input) {
-                perror("Failed to allocate memory");
-                fclose(file);
-                return 1; // Exit if memory allocation fails
-        }
-
-        read = fread(input, 1, len, file); // Read the file into the buffer
-        input[read] = '\0'; // Null-terminate the string
-
-        fclose(file); // Close the file
-        lexer_main(input); // run operations on text with buffer
-        free(input); // Free allocated memory
-
-        return 0;
 }
