@@ -1,0 +1,42 @@
+Im starting to get my bearings on Parsing and so on so let me fill you in imaginary reader (If someone is actually reading this thank you and I hope that this is useful in some way) so lets get started
+
+# Introduction to Syntactic Analysis and AST's
+
+this is nothing that we havent used before first we need to figure out what type of parsing we are using there are two main types of parsers from what Ive gathered
+both will have the same end goal of creating an AST(Abstract Syntax Tree) what this seems to do is encode information about not only orders of operations but also as you
+move higher up the tree the higher level of abstraction is reached for example at the top you might have
+
+        Program(The entire file basically)
+           /\
+         /    \
+        =     If
+       /\      /\
+      x  5    ==  \
+              /\   \
+            x   10   \
+                      ++
+                       \
+                        x 
+
+now to make sense of what we're looking at maybe very obviously the lext node of = is what is being modified and 5 is whats being assigned to x while = is the operator this would be considered a statement 
+now for an if its a little more abstract than a statement and has multiple statements to the left is the condition if (condition) {x++;} to the right the statement 
+for an if statement with multiple statements we might add another layer of abstraction called a block representing the statements within the {} with the actions being executed from left to right
+and finally of course the leaves are the lowest level of abstraction/not really abstract at all and those are the tokens themselves
+
+with this new found familiarity with AST's what are the different methods of construction for them
+
+1 : Top Down Parser
+this method typically moves from large chunks such as the file itself to functions to ifs and whatnot so on and so forth all the way does using recursive methods
+this method is typically simpler to implement and called an ll parser 
+
+2 : Bottom up Parser
+a bottom up parser starts with the lower levels and tries to build to the whole this method typically is more complex but allows for more complex grammars and flexibility
+and is often denoted as an lr parser
+
+Of course in my over ambitious nature I will be trying to implement an LR(1) Parser the 1 simply means we have a lookahead token for checking syntax as we go trhough the list
+
+I really dont know how Im going to do this yet so Im going to hop on vim and start messing around with some Ideas and implementing a stack 
+
+for now my basic Idea is to create a DFA for syntax where we change states via a single transition table and through initial passthrough change states and add the the stack then
+for actual tree construction only use the stack order for actually creating the tree
+
