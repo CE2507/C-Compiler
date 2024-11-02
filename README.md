@@ -1,7 +1,21 @@
+**NOTE : if you have any suggestions for improvement or criticisms you can reach me at the email listed on my profile**
+
+
+
+**Currently Working On**
+
+- Refactoring and Improving DFA_Lexer.c
+- Writing Syntactic Analysis File
+- Updating and Organizing Lexical Analysis Description
+
+
 **Overview**
   
-  If your not sure where to start I reccomend looking at Lexical-Analysis file
+  This is my first time working with C and my first big project if you are looking for a more advanced guide this is not it. 
+  This project is simply my work and a detailed description of what I learned along the way of creating it.
 
+  
+  If your not sure where to start I reccomend looking at Lexical-Analysis file
 
 
 
@@ -11,7 +25,3 @@
   I would reccomend reading "What is DFA" Than "Conversions" and finally "Regex to NFA ex." after that
   starting with the NFA conversions going to the NFA to DFA example and the DFA conversions is how it is meant to be read
 
-**Note**
-
-  comment regex are not included I encourage you to try it for yourself I havent decided yet weather Im going to add them to the
-  final DFA implementation
